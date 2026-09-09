@@ -1,0 +1,65 @@
+CREATE TABLE online_sales (
+    order_id INT,
+    order_date DATE,
+    amount DECIMAL(10,2),
+    product_id VARCHAR(20)
+);
+
+INSERT INTO online_sales
+(order_id, order_date, amount, product_id)
+VALUES
+(1001, '2025-01-05', 1200, 'P101'),
+(1002, '2025-01-15', 2500, 'P102'),
+(1003, '2025-01-20', 1800, 'P103'),
+(1004, '2025-02-03', 3200, 'P101'),
+(1005, '2025-02-12', 1500, 'P104'),
+(1006, '2025-02-25', 2800, 'P102'),
+(1007, '2025-03-05', 2100, 'P105'),
+(1008, '2025-03-14', 3500, 'P101'),
+(1009, '2025-03-22', 1700, 'P103'),
+(1010, '2025-04-08', 4000, 'P106'),
+(1011, '2025-04-18', 2200, 'P102'),
+(1012, '2025-05-02', 3100, 'P104'),
+(1013, '2025-05-15', 2700, 'P105'),
+(1014, '2025-06-10', 4500, 'P101'),
+(1015, '2025-06-25', 1900, 'P103');
+
+-- Monthly Revenue and Order Volume
+
+SELECT
+    strftime('%Y', order_date) AS year,
+    strftime('%m', order_date) AS month,
+    SUM(amount) AS monthly_revenue,
+    COUNT(DISTINCT order_id) AS order_volume
+FROM online_sales
+GROUP BY
+    strftime('%Y', order_date),
+    strftime('%m', order_date)
+ORDER BY year, month;
+
+-- Specific Time Period: January to March 2025
+
+SELECT
+    strftime('%Y', order_date) AS year,
+    strftime('%m', order_date) AS month,
+    SUM(amount) AS monthly_revenue,
+    COUNT(DISTINCT order_id) AS order_volume
+FROM online_sales
+WHERE order_date BETWEEN '2025-01-01' AND '2025-03-31'
+GROUP BY
+    strftime('%Y', order_date),
+    strftime('%m', order_date)
+ORDER BY year, month;
+
+-- Highest Revenue Month
+
+SELECT
+    strftime('%Y', order_date) AS year,
+    strftime('%m', order_date) AS month,
+    SUM(amount) AS monthly_revenue
+FROM online_sales
+GROUP BY
+    strftime('%Y', order_date),
+    strftime('%m', order_date)
+ORDER BY monthly_revenue DESC
+LIMIT 1;
